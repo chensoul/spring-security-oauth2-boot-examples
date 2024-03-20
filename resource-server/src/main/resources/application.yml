@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+spring:
+  redis:
+    host: localhost
+    password: 123456
+
+jdbc:
+  url: jdbc:h2:~/data/oauth2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  driverClassName: org.h2.Driver
+  username: sa
+  password:
+
+security:
+  oauth2:
+    token-type: remote
+    client:
+      client-id: client
+      client-secret: secret
+    resource:
+      token-info-uri: http://localhost:8080/oauth/check_token
+      prefer-token-info: true
+#      jwt:
+#        key-value: 123456
+      #      token-info-uri: http://localhost:8080/oauth/check_token
+#      jwk:
+#        key-set-uri: http://localhost:8080/jwks
+
+logging:
+  level:
+    org.springframework.security: trace
+debug: true

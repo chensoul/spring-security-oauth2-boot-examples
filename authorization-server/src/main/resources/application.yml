@@ -1,0 +1,37 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  redis:
+    host: localhost
+    password: 123456
+
+jdbc:
+  url: jdbc:h2:~/data/oauth2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  driverClassName: org.h2.Driver
+  username: sa
+  password:
+
+security:
+  oauth2:
+    client-type: memory
+    user-type: memory
+    token-type: jwt
+    client:
+      client-id: client
+      client-secret: secret
+    resource:
+      jwt:
+        key-value: 123456
+    authorization:
+#      jwt:
+#        key-store: classpath:mykeystore.jks
+#        key-store-password: mypass
+#        key-alias: myalias
+#        key-password: mypass
+      check-token-access: isAuthenticated()
+      token-Key-access: isAuthenticated()
+
+logging:
+  level:
+    org.springframework.security: trace
+debug: on
