@@ -1,4 +1,4 @@
-# learning-spring-security-oauth2-boot
+# learn-spring-security-oauth2-boot
 
 使用 [Spring Security OAuth2 Boot](https://github.com/spring-attic/spring-security-oauth2-boot) 搭建 OAuth2 授权和认证服务。
 
