@@ -4,18 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.chensoul.learning</groupId>
-        <artifactId>learning-spring-security-oauth2-boot</artifactId>
+        <groupId>com.chensoul</groupId>
+        <artifactId>learn-spring-security-oauth2-boot</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.wesine.cocktail</groupId>
     <artifactId>sso-github</artifactId>
-
 
     <dependencies>
         <dependency>
-            <groupId>com.chensoul.learning</groupId>
+            <groupId>com.chensoul</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -29,11 +28,5 @@
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-        </dependency>
-
     </dependencies>
 </project>
