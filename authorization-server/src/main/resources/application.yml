@@ -24,10 +24,10 @@ security:
         key-value: 123456
     authorization:
 #      jwt:
-#        key-store: classpath:mykeystore.jks
-#        key-store-password: mypass
-#        key-alias: myalias
-#        key-password: mypass
+#        key-store: classpath:keystore.p12
+#        key-store-password: password
+#        key-alias: authorizationserver
+#        key-password: password
       check-token-access: isAuthenticated()
       token-Key-access: isAuthenticated()
 

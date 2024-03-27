@@ -7,31 +7,24 @@
 > - 该项目2022年5月31日归档，不再维护，推荐使用 [Spring Authorization Server](https://github.com/spring-projects/spring-authorization-server) 代替。
 
 
-## JWT 私钥公钥生成
+## 生成证书
 
-- 生成 JKS 文件
+生成 keystore：
 
 ```bash
-keytool -genkeypair -alias myalias -storetype PKCS12 -keyalg RSA -keypass keypass -keystore mykeystore.jks -storepass storepass \
- -dname "CN=Spring Authorization Server,OU=Spring,O=Pivotal,L=San Francisco,ST=CA,C=US" -validity 3650
+keytool -genkeypair -alias authorizationserver -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -storepass password -dname "CN=Web Server,OU=Unit,O=Organization,L=City,S=State,C=CN" -validity 3650
 ```
 
-- 导出证书文件
+导出公钥文件：
 
 ```bash
-keytool -exportcert -alias myalias -storepass storepass -keystore mykeystore.jks -file public.cer
+keytool -list -rfc --keystore keystore.p12 -storepass password | openssl x509 -inform pem -pubkey > public.key
 ```
 
-- 导出公钥文件
+导出私钥文件：
 
 ```bash
-keytool -list -rfc --keystore mykeystore.jks -storepass storepass | openssl x509 -inform pem -pubkey > public.key
-```
-
-- 导出私钥文件：
-
-```bash
-keytool -importkeystore -srckeystore mykeystore.jks -srcstorepass storepass -destkeystore private.p12 -deststoretype PKCS12 -deststorepass storepass -destkeypass keypass
+keytool -importkeystore -srckeystore keystore.p12 -srcstorepass password -destkeystore private.p12 -deststoretype PKCS12 -deststorepass password -destkeypass password
 
 #输入密码 storepass
 openssl pkcs12 -in private.p12 -nodes -nocerts -out private.key
