@@ -1,6 +1,6 @@
 package com.chensoul.oauth2.authorization.controller;
 
-import com.chensoul.oauth2.common.model.Result;
+import com.chensoul.oauth2.common.util.RestResponse;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
@@ -28,7 +28,7 @@ public class UserController {
 	private UserDetailsService userDetailsService;
 
 	@GetMapping("/info")
-	public Result<UserDetails> info(final Authentication authentication) {
+	public RestResponse<UserDetails> info(final Authentication authentication) {
 		final Object principal = authentication.getPrincipal();
 
 		UserDetails userDetails = null;
@@ -39,7 +39,7 @@ public class UserController {
 			userDetails = this.userDetailsService.loadUserByUsername(username);
 			((CredentialsContainer) userDetails).eraseCredentials();
 		}
-		return Result.ok(userDetails);
+		return RestResponse.ok(userDetails);
 	}
 
 	/**
@@ -50,12 +50,12 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/logout")
-	public Result logout(String access_token, final String authorization) {
+	public RestResponse logout(String access_token, final String authorization) {
 		if (StringUtils.isBlank(access_token)) {
 			access_token = authorization;
 		}
 		if (StringUtils.isBlank(access_token)) {
-			return Result.ok();
+			return RestResponse.ok();
 		}
 		if (access_token.toLowerCase().contains("bearer ".toLowerCase())) {
 			access_token = access_token.toLowerCase().replace("bearer ", "");
@@ -66,7 +66,7 @@ public class UserController {
 			final OAuth2RefreshToken refreshToken = oAuth2AccessToken.getRefreshToken();
 			this.redisTokenStore.removeRefreshToken(refreshToken);
 		}
-		return Result.ok();
+		return RestResponse.ok();
 	}
 
 }

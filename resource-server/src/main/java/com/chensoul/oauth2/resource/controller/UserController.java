@@ -1,6 +1,6 @@
 package com.chensoul.oauth2.resource.controller;
 
-import com.chensoul.oauth2.common.model.Result;
+import com.chensoul.oauth2.common.util.RestResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class UserController {
 	@GetMapping("/user")
-	public Result user(Authentication authentication) {
-		return Result.ok(authentication.getPrincipal());
+	public RestResponse user(Authentication authentication) {
+		return RestResponse.ok(authentication.getPrincipal());
 	}
 }

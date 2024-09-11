@@ -14,15 +14,15 @@ jdbc:
 
 security:
   oauth2:
-    token-type: remote
+    token-type: jwt
     client:
       client-id: client
       client-secret: secret
     resource:
       token-info-uri: http://localhost:8080/oauth/check_token
       prefer-token-info: true
-#      jwt:
-#        key-value: 123456
+      #      jwt:
+      #        key-value: 123456
       #      token-info-uri: http://localhost:8080/oauth/check_token
 #      jwk:
 #        key-set-uri: http://localhost:8080/jwks

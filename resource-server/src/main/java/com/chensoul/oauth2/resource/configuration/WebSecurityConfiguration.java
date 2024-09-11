@@ -1,37 +1,39 @@
 package com.chensoul.oauth2.resource.configuration;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import static com.chensoul.oauth2.common.constants.EndpointConstant.NON_TOKEN_BASED_AUTH_ENTRY_POINTS;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
+/**
+ * 认证相关配置
+ */
+@Slf4j
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableConfigurationProperties(PermitUrlProperties.class)
+@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
+@RequiredArgsConstructor
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-	private AccessDeniedHandler accessDeniedHandler;
+  private final AccessDeniedHandler accessDeniedHandler;
+  private final AuthenticationEntryPoint authenticationEntryPoint;
 
-	public WebSecurityConfiguration(AccessDeniedHandler accessDeniedHandler) {
-		this.accessDeniedHandler = accessDeniedHandler;
-	}
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+            .antMatchers(NON_TOKEN_BASED_AUTH_ENTRY_POINTS).permitAll()
+            .anyRequest().authenticated()
+            .and().csrf().disable()
+            // 认证权限不足处理
+            .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
+  }
 
-	protected void configure(HttpSecurity http) throws Exception {
-		//前后端分离项目，不需要session
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
-			.and()
-			.formLogin().disable()
-			.authorizeRequests().anyRequest().authenticated()
-			.and()
-			.exceptionHandling()
-			.accessDeniedHandler(accessDeniedHandler);
-	}
-
-	@Override
-	public void configure(WebSecurity web) {
-		web.ignoring().antMatchers("/favicon.ico", "/error", "/actuator");
-	}
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+    web.ignoring();
+  }
 }

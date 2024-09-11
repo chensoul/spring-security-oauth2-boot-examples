@@ -3,6 +3,7 @@ spring:
     allow-bean-definition-overriding: true
   redis:
     host: localhost
+    port: 6379
     password: 123456
 
 jdbc:
@@ -13,8 +14,7 @@ jdbc:
 
 security:
   oauth2:
-    client-type: memory
-    user-type: memory
+    client-type: jdbc
     token-type: jwt
     client:
       client-id: client
@@ -22,16 +22,13 @@ security:
     resource:
       jwt:
         key-value: 123456
-    authorization:
-#      jwt:
-#        key-store: classpath:keystore.p12
-#        key-store-password: password
-#        key-alias: authorizationserver
-#        key-password: password
-      check-token-access: isAuthenticated()
-      token-Key-access: isAuthenticated()
+    #    authorization:
+    #      jwt:
+    #        key-store: classpath:keystore.p12
+    #        key-store-password: password
+    #        key-alias: authorizationserver
+    #        key-password: password
 
 logging:
   level:
-    org.springframework.security: trace
-debug: on
+    org.springframework.security.core: trace

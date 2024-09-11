@@ -1,7 +1,7 @@
 package com.chensoul.oauth2.resource.configuration;
 
-import com.chensoul.oauth2.common.security.annotation.Inner;
-import com.chensoul.oauth2.common.webmvc.SpringContextHolder;
+import com.chensoul.oauth2.common.util.SpringContextHolder;
+import com.chensoul.oauth2.resource.annotation.Inner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

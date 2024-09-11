@@ -1,6 +1,6 @@
 package com.chensoul.oauth2.resource.controller;
 
-import com.chensoul.oauth2.common.security.annotation.Inner;
+import com.chensoul.oauth2.resource.annotation.Inner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

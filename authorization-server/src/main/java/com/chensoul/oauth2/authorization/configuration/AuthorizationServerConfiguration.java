@@ -1,8 +1,8 @@
 package com.chensoul.oauth2.authorization.configuration;
 
-import com.chensoul.oauth2.common.security.exception.CustomWebResponseExceptionTranslator;
+import com.chensoul.oauth2.common.support.CustomWebResponseExceptionTranslator;
 import java.util.Arrays;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,9 +15,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint;
 import org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint;
@@ -39,12 +39,12 @@ import org.springframework.security.web.authentication.ui.DefaultLoginPageGenera
  *
  * <p>
  *
- * <a href="http://127.0.0.1:8000/oauth/authorize?client_id=client&redirect_uri=http://127.0.0.1:123&response_type=code&scope=server&state=beff3dfc-bad8-40db-b25f-e5459e3d6ad7">授权码模式：获取授权码</a> <br>
- * <a href="http://127.0.0.1:8000/oauth/token?code=oW9ca3&client_id=client&client_secret=secret&redirect_uri=http://127.0.0.1:123&grant_type=authorization_code">授权码模式：获取 Token</a> <br>
- * <a href="http://127.0.0.1:8000/oauth/authorize?client_id=client&redirect_uri=http://127.0.0.1:123&response_type=token&scope=server">implicit模式</a><br>
- * <a href="http://127.0.0.1:8000/oauth/token?client_id=client&client_secret=secret&grant_type=refresh_token&refresh_token=">刷新 Token</a> <br/>
- * <a href="http://127.0.0.1:8000/oauth/token?grant_type=client_credentials&client_id=client&client_secret=secret&scope=server">client_credentials模式</a> <br>
- * <a href="http://127.0.0.1:8000/oauth/check_token?token=">检查 token</a>
+ * <a href="http://127.0.0.1:8080/oauth/authorize?client_id=client&client_secret=secret&redirect_uri=http://127.0.0.1:8082&response_type=code&scope=server&state=beff3dfc-bad8-40db-b25f-e5459e3d6ad7">授权码模式：获取授权码</a> <br>
+ * <a href="http://127.0.0.1:8080/oauth/token?code=oW9ca3&client_id=client&client_secret=secret&redirect_uri=http://127.0.0.1:8082&grant_type=authorization_code">授权码模式：获取 Token</a> <br>
+ * <a href="http://127.0.0.1:8080/oauth/authorize?client_id=client&redirect_uri=http://127.0.0.1:8082&response_type=token&scope=server">implicit模式</a><br>
+ * <a href="http://127.0.0.1:8080/oauth/token?client_id=client&client_secret=secret&grant_type=refresh_token&refresh_token=">刷新 Token</a> <br/>
+ * <a href="http://127.0.0.1:8080/oauth/token?grant_type=client_credentials&client_id=client&client_secret=secret&scope=server">client_credentials模式</a> <br>
+ * <a href="http://127.0.0.1:8080/oauth/check_token?token=">检查 token</a>
  * </p>
  *
  * @author <a href="mailto:chensoul.eth@gmail.com">chensoul</a>
@@ -65,12 +65,13 @@ import org.springframework.security.web.authentication.ui.DefaultLoginPageGenera
  */
 @Configuration
 @EnableAuthorizationServer
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
 	private final TokenStore tokenStore;
-	private final ClientDetailsService clientDetailsService;
+	//需要是JdbcClientDetailsService，否则内存异常
+	private final JdbcClientDetailsService clientDetailsService;
 	private final AuthorizationCodeServices authorizationCodeServices;
 	private final ApprovalStore approvalStore;
 
@@ -86,7 +87,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Override
 	public void configure(final AuthorizationServerSecurityConfigurer security) throws Exception {
-		security.tokenKeyAccess("permitAll()").checkTokenAccess("permitAll()").allowFormAuthenticationForClients();
+		security.tokenKeyAccess("isAuthenticated()").checkTokenAccess("isAuthenticated()").allowFormAuthenticationForClients();
 	}
 
 	@Override
