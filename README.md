@@ -13,21 +13,21 @@ JRE 提供了一个简单的证书管理工具——keytool。它位于您的JRE
 
 ```bash
 keytool -genkeypair -alias mytest -keyalg RSA -keysize 2048 \
-    -storetype PKCS12 -keystore mytest.p12 -storepass mytest \
+    -storetype PKCS12 -keystore mytest.p12 -storepass mypass \
     -dname "CN=WebServer,OU=Unit,O=Organization,L=City,S=State,C=CN" -validity 3650
 ```
 
 导出公钥文件：
 ```bash
-keytool -list -rfc --keystore mytest.p12 -storepass mytest | \
+keytool -list -rfc --keystore mytest.p12 -storepass mypass | \
     openssl x509 -inform pem -pubkey > public.key
 ```
 
 导出私钥文件：
 ```bash
-keytool -importkeystore -srckeystore mytest.p12 -srcstorepass mytest \
+keytool -importkeystore -srckeystore mytest.p12 -srcstorepass mypass \
     -destkeystore private.p12 -deststoretype PKCS12 \
-    -deststorepass mytest -destkeypass mytest
+    -deststorepass mypass -destkeypass mytest
 
 #输入 storepass 密码 
 openssl pkcs12 -in private.p12 -nodes -nocerts -out private.key
