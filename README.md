@@ -9,23 +9,26 @@
 
 ## 生成证书
 
-生成 keystore：
+JRE 提供了一个简单的证书管理工具——keytool。它位于您的JRE_HOME\bin目录下。以下代码中的命令生成一个自签名证书并将其放入 PKCS12 KeyStore 中。除了 KeyStore 的类型之外，您还需要设置其有效期、别名以及文件名。在开始生成过程之前，keytool会要求您输入密码和一些其他信息，如下所示：
 
 ```bash
-keytool -genkeypair -alias authorizationserver -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -storepass password -dname "CN=Web Server,OU=Unit,O=Organization,L=City,S=State,C=CN" -validity 3650
+keytool -genkeypair -alias mytest -keyalg RSA -keysize 2048 \
+    -storetype PKCS12 -keystore mytest.p12 -storepass mytest \
+    -dname "CN=WebServer,OU=Unit,O=Organization,L=City,S=State,C=CN" -validity 3650
 ```
 
 导出公钥文件：
-
 ```bash
-keytool -list -rfc --keystore keystore.p12 -storepass password | openssl x509 -inform pem -pubkey > public.key
+keytool -list -rfc --keystore mytest.p12 -storepass mytest | \
+    openssl x509 -inform pem -pubkey > public.key
 ```
 
 导出私钥文件：
-
 ```bash
-keytool -importkeystore -srckeystore keystore.p12 -srcstorepass password -destkeystore private.p12 -deststoretype PKCS12 -deststorepass password -destkeypass password
+keytool -importkeystore -srckeystore mytest.p12 -srcstorepass mytest \
+    -destkeystore private.p12 -deststoretype PKCS12 \
+    -deststorepass mytest -destkeypass mytest
 
-#输入密码 storepass
+#输入 storepass 密码 
 openssl pkcs12 -in private.p12 -nodes -nocerts -out private.key
 ```
